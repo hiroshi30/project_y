@@ -1,0 +1,1 @@
+void obj_load(char title[]);
