@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.28 FATAL_ERROR)
 
-project(engine
+project(ENGINE_NAME
 	VERSION 0.0.1
-	DESCRIPTION "my game engine"
+	DESCRIPTION "ENGINE_NAME is my game engine"
 	LANGUAGES C
 )
 
@@ -21,25 +21,28 @@ set(BUILD_UTILS OFF CACHE BOOL "" FORCE)
 
 add_subdirectory(external/glew-2.1.0/build/cmake)
 
+add_subdirectory(external/Simple-OpenGL-Image-Library)
 
-add_library(engine STATIC
+add_library(ENGINE_NAME STATIC
 	src/main.c
 )
 
-target_include_directories(engine PUBLIC
+target_include_directories(ENGINE_NAME PUBLIC
 	${OPENGL_INCLUDE_DIRS}
 	external/glew-2.1.0/include
 	external/glfw-3.3.10/include
+	external/Simple-OpenGL-Image-Library/src
 
 	include
 )
 
-target_link_libraries(engine PUBLIC
+target_link_libraries(ENGINE_NAME PUBLIC
 	OpenGL::GL
 	glfw
 	glew_s
+	SOIL
 )
 
 # -mwindows - remove console output
-target_compile_options(engine PRIVATE -Wall -Wextra -Wpedantic)
-target_compile_features(engine PRIVATE c_std_23)
+target_compile_options(ENGINE_NAME PRIVATE -Wall -Wextra -Wpedantic)
+target_compile_features(ENGINE_NAME PRIVATE c_std_23)
