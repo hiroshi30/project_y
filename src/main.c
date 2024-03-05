@@ -37,6 +37,13 @@ int main(void) {
 
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     
+    GLfloat mat4x4[4][4] = {
+        {1, 0, 0, 0.2},
+        {0, 1, 0, 0.2},
+        {0, 0, 1, 0},
+        {0, 0, 0, 1}
+    };
+
     while (!glfwWindowShouldClose(ENGINE_NAMEWindow)) {
         glfwPollEvents();
 
@@ -47,9 +54,8 @@ int main(void) {
 
         glUseProgram(shader_program);
 
-        // GLfloat multiplier = (1 + sin(glfwGetTime())) / 2;
-        // GLuint location = glGetUniformLocation(shader_program, "multiplier");
-        // glUniform1f(location, multiplier);
+        GLuint loaction = glGetUniformLocation(shader_program, "transform");
+        glUniformMatrix4fv(loaction, 1, GL_FALSE, &mat4x4[0][0]);
 
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, 0);

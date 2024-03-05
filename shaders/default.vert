@@ -8,9 +8,10 @@ layout (location = 2) in vec2 texture_coordsVI;
 out vec3 colorVO;
 out vec2 texture_coordsVO;
 
+uniform mat4 transform;
 
 void main() {
-	gl_Position = vec4(position, 1.0f);
+	gl_Position = transform * vec4(position, 1.0f);
 	colorVO = colorVI;
 	texture_coordsVO = texture_coordsVI;
 }
