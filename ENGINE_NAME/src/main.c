@@ -11,7 +11,7 @@
 #include <string.h>
 
 
-GLFWwindow* ENGINE_NAMEWindow;
+GLFWwindow* ENGINE_NAME_window;
 
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
@@ -21,7 +21,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 }
 
 
-int ENGINE_NAMEInit(int width, int height, char* title) {
+int ENGINE_NAME_init(int width, int height, char* title) {
     if (glfwInit() == GLFW_FALSE) {
         #ifdef DEBUG
             printf("!!! ERROR in glfwInit() !!!\n");
@@ -35,27 +35,27 @@ int ENGINE_NAMEInit(int width, int height, char* title) {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     
-    ENGINE_NAMEWindow = glfwCreateWindow(width, height, title, NULL, NULL);
-    if (ENGINE_NAMEWindow == NULL) {
+    ENGINE_NAME_window = glfwCreateWindow(width, height, title, NULL, NULL);
+    if (ENGINE_NAME_window == NULL) {
         #ifdef DEBUG
             printf("!!! ERROR in glfwCreateWindow() !!!\n");
         #endif // DEBUG
-        glfwDestroyWindow(ENGINE_NAMEWindow);
+        glfwDestroyWindow(ENGINE_NAME_window);
         glfwTerminate();
         return 1;
     }
-    glfwMakeContextCurrent(ENGINE_NAMEWindow);
+    glfwMakeContextCurrent(ENGINE_NAME_window);
       
     glViewport(0, 0, width, height);
 
-    glfwSetKeyCallback(ENGINE_NAMEWindow, key_callback);
+    glfwSetKeyCallback(ENGINE_NAME_window, key_callback);
 
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
         #ifdef DEBUG
             printf("!!! ERROR in glewInit() !!!\n");
         #endif // DEBUG
-        glfwDestroyWindow(ENGINE_NAMEWindow);
+        glfwDestroyWindow(ENGINE_NAME_window);
         glfwTerminate();
         return 1;
     }
@@ -64,20 +64,20 @@ int ENGINE_NAMEInit(int width, int height, char* title) {
 }
 
 
-void ENGINE_NAMEExit(void) {
-    glfwDestroyWindow(ENGINE_NAMEWindow);
+void ENGINE_NAME_exit(void) {
+    glfwDestroyWindow(ENGINE_NAME_window);
     glfwTerminate();
 }
 
 
-GLint ENGINE_NAMEGetMAX_VERTEX_ATTRIBS(void) {
+GLint ENGINE_NAME_get_MAX_VERTEX_ATTRIBS(void) {
     GLint MAX_VERTEX_ATTRIBS;
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &MAX_VERTEX_ATTRIBS);
     return MAX_VERTEX_ATTRIBS;
 }
 
 
-GLchar* ENGINE_NAMELoadShader(char* path) {
+GLchar* ENGINE_NAME_load_shader(char* path) {
     FILE* file = fopen(path, "r");
     if (file == NULL) {
         return NULL;
@@ -95,13 +95,13 @@ GLchar* ENGINE_NAMELoadShader(char* path) {
 }
 
 
-GLuint ENGINE_NAMECreateVertexShader(char* path) {
-    const GLchar* vertex_shader_source = ENGINE_NAMELoadShader(path);
+GLuint ENGINE_NAME_create_vertex_shader(char* path) {
+    const GLchar* vertex_shader_source = ENGINE_NAME_load_shader(path);
     if (vertex_shader_source == NULL) {
         #ifdef DEBUG
             printf("!!! ERROR in loading vertex shader source !!!\n");
         #endif // DEBUG
-        ENGINE_NAMEExit();
+        ENGINE_NAME_exit();
         return 1;
     }
     GLuint vertex_shader;
@@ -118,7 +118,7 @@ GLuint ENGINE_NAMECreateVertexShader(char* path) {
         #ifdef DEBUG
             printf("!!! ERROR in creating vertex shader !!!\n%s\n", info_log);
         #endif // DEBUG
-        ENGINE_NAMEExit();
+        ENGINE_NAME_exit();
         return 1;
     }
 
@@ -126,13 +126,13 @@ GLuint ENGINE_NAMECreateVertexShader(char* path) {
 }
 
 
-GLuint ENGINE_NAMECreateFragmentShader(char* path) {
-    const GLchar* fragment_shader_source = ENGINE_NAMELoadShader(path);
+GLuint ENGINE_NAME_create_fragment_shader(char* path) {
+    const GLchar* fragment_shader_source = ENGINE_NAME_load_shader(path);
     if (fragment_shader_source == NULL) {
         #ifdef DEBUG
             printf("!!! ERROR in loading fragment shader source !!!\n");
         #endif // DEBUG
-        ENGINE_NAMEExit();
+        ENGINE_NAME_exit();
         return 1;
     }
     GLuint fragment_shader;
@@ -149,7 +149,7 @@ GLuint ENGINE_NAMECreateFragmentShader(char* path) {
         #ifdef DEBUG
             printf("!!! ERROR in creating fragment shader !!!\n%s\n", info_log);
         #endif // DEBUG
-        ENGINE_NAMEExit();
+        ENGINE_NAME_exit();
         return 1;
     }
 
@@ -157,7 +157,7 @@ GLuint ENGINE_NAMECreateFragmentShader(char* path) {
 }
 
 
-GLuint ENGINE_NAMECreateShaderProgram(GLuint vertex_shader, GLuint fragment_shader) {
+GLuint ENGINE_NAME_create_shader_program(GLuint vertex_shader, GLuint fragment_shader) {
     GLuint shader_program;
     shader_program = glCreateProgram();
     glAttachShader(shader_program, vertex_shader);
@@ -172,7 +172,7 @@ GLuint ENGINE_NAMECreateShaderProgram(GLuint vertex_shader, GLuint fragment_shad
         #ifdef DEBUG
             printf("!!! ERROR in creating shader program !!!\n%s\n", info_log);
         #endif // DEBUG
-        ENGINE_NAMEExit();
+        ENGINE_NAME_exit();
         return 1;
     }
 
@@ -183,7 +183,7 @@ GLuint ENGINE_NAMECreateShaderProgram(GLuint vertex_shader, GLuint fragment_shad
 }
 
 
-void ENGINE_NAMELoadModel(GLuint VAO, GLuint VBO, GLuint EBO, GLfloat* vertices, GLuint sizeof_vertices, GLuint* data, GLuint sizeof_data, GLuint* indices, GLuint sizeof_indices) {
+void ENGINE_NAME_load_model(GLuint VAO, GLuint VBO, GLuint EBO, GLfloat* vertices, GLuint sizeof_vertices, GLuint* data, GLuint sizeof_data, GLuint* indices, GLuint sizeof_indices) {
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -208,7 +208,7 @@ void ENGINE_NAMELoadModel(GLuint VAO, GLuint VBO, GLuint EBO, GLfloat* vertices,
 }
 
 
-GLuint ENGINE_NAMECreateTexture(char* path) {
+GLuint ENGINE_NAME_create_texture(char* path) {
     int width, height;
     unsigned char* image = SOIL_load_image(path, &width, &height, 0, SOIL_LOAD_RGB);
 

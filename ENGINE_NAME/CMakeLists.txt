@@ -25,6 +25,7 @@ add_subdirectory(external/Simple-OpenGL-Image-Library)
 
 add_library(ENGINE_NAME STATIC
 	src/main.c
+	src/mat4x4.c
 )
 
 target_include_directories(ENGINE_NAME PUBLIC
@@ -34,6 +35,7 @@ target_include_directories(ENGINE_NAME PUBLIC
 	external/Simple-OpenGL-Image-Library/src
 
 	include
+	src
 )
 
 target_link_libraries(ENGINE_NAME PUBLIC
