@@ -25,6 +25,9 @@ add_subdirectory(external/Simple-OpenGL-Image-Library)
 
 add_library(ENGINE_NAME STATIC
 	src/main.c
+	src/new_math.c
+	src/vec3.c
+	src/vec4.c
 	src/mat4x4.c
 )
 

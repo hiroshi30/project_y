@@ -3,18 +3,69 @@
 
 #include <math.h>
 
+#include <constants.h>
+#include <vec3.h>
 #include <mat4x4.h>
 
 
+void mat4x4_make_zero_matrix(mat4x4 output) {
+	output[0][0] = 0.0f;
+	output[0][1] = 0.0f;
+	output[0][2] = 0.0f;
+	output[0][3] = 0.0f;
+
+	output[1][0] = 0.0f;
+	output[1][1] = 0.0f;
+	output[1][2] = 0.0f;
+	output[1][3] = 0.0f;
+
+	output[2][0] = 0.0f;
+	output[2][1] = 0.0f;
+	output[2][2] = 0.0f;
+	output[2][3] = 0.0f;
+
+	output[3][0] = 0.0f;
+	output[3][1] = 0.0f;
+	output[3][2] = 0.0f;
+	output[3][3] = 0.0f;
+}
+
+
+void mat4x4_make_identity_matrix(mat4x4 output) {
+	output[0][0] = 1.0f;
+	output[0][1] = 0.0f;
+	output[0][2] = 0.0f;
+	output[0][3] = 0.0f;
+
+	output[1][0] = 0.0f;
+	output[1][1] = 1.0f;
+	output[1][2] = 0.0f;
+	output[1][3] = 0.0f;
+
+	output[2][0] = 0.0f;
+	output[2][1] = 0.0f;
+	output[2][2] = 1.0f;
+	output[2][3] = 0.0f;
+
+	output[3][0] = 0.0f;
+	output[3][1] = 0.0f;
+	output[3][2] = 0.0f;
+	output[3][3] = 1.0f;
+}
+
+
 void mat4x4_multiplication(mat4x4 multiplier1, mat4x4 multiplier2, mat4x4 output) {
-	GLfloat summ;
+	mat4x4 temp = zero_mat4x4;
 	for (int x = 0; x < 4; ++x) {
 		for (int y = 0; y < 4; ++y) {
-			summ = 0;
 			for (int i = 0; i < 4; ++i) {
-				summ += multiplier1[y][i] * multiplier2[i][x];
+				temp[y][x] += multiplier1[y][i] * multiplier2[i][x];
 			}
-			output[y][x] = summ;
+		}
+	}
+	for (int x = 0; x < 4; ++x) {
+		for (int y = 0; y < 4; ++y) {
+			output[y][x] = temp[y][x];
 		}
 	}
 }
@@ -51,7 +102,23 @@ void mat4x4_rotate(mat4x4 output, GLfloat x, GLfloat y, GLfloat z) {
 	rotate_x[2][1] = sin(x);
 	rotate_x[2][2] = cos(x);
 
-	mat4x4_multiplication(rotate_x, output, output);
+	mat4x4_multiplication(output, rotate_x, output);
+
+	mat4x4 rotate_y = identity_mat4x4;
+	rotate_y[0][0] = cos(y);
+	rotate_y[0][2] = sin(y);
+	rotate_y[2][0] = -sin(y);
+	rotate_y[2][2] = cos(y);
+
+	mat4x4_multiplication(output, rotate_y, output);
+
+	mat4x4 rotate_z = identity_mat4x4;
+	rotate_z[0][0] = cos(z);
+	rotate_z[0][1] = -sin(z);
+	rotate_z[1][0] = sin(z);
+	rotate_z[1][1] = cos(z);
+
+	mat4x4_multiplication(output, rotate_z, output);
 }
 
 
@@ -64,4 +131,93 @@ void mat4x4_transpose(mat4x4 output) {
 			output[x][y] = temp;
 		}
 	}
+}
+
+
+void mat4x4_perspective_projection(mat4x4 output, GLfloat fov, GLfloat attitude, GLfloat near, GLfloat far) {
+	mat4x4_make_zero_matrix(output);
+	
+	fov *= degrees_to_radians;
+
+	output[0][0] = 1 / tan(fov / 2);
+	output[1][1] = attitude / tan(fov / 2);
+	output[2][2] = -(far + near) / (far - near);
+	output[2][3] = -2 * far * near / (far - near);
+	output[3][2] = -1;
+}
+
+
+void mat4x4_perspective_projection2(mat4x4 output, GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far) {
+	mat4x4_make_zero_matrix(output);
+	
+	output[0][0] = 2 * near / (right - left);
+	output[0][2] = (right + left) / (right - left);
+	output[1][1] = 2 * near / (top - bottom);
+	output[1][2] = (top + bottom) / (top - bottom);
+	output[2][2] = -(far + near) / (far - near);
+	output[2][3] = -2 * far * near / (far - near);
+	output[3][2] = -1;
+}
+
+
+void mat4x4_orthographic_projection(mat4x4 output, GLfloat fov, GLfloat attitude, GLfloat near, GLfloat far) {
+	mat4x4_make_zero_matrix(output);
+	
+	fov *= degrees_to_radians;
+
+	output[0][0] = near / tan(fov / 2);
+	output[1][1] = attitude * near / tan(fov / 2);
+	output[2][2] = -2 / (far - near);
+	output[2][3] = -(far + near) / (far - near);
+	output[3][3] = 1;
+}
+
+
+void mat4x4_orthographic_projection2(mat4x4 output, GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far) {
+	mat4x4_make_zero_matrix(output);
+	
+	output[0][0] = 2 / (right - left);
+	output[0][3] = -(right + left) / (right - left);
+	output[1][1] = 2 / (top - bottom);
+	output[1][3] = -(top + bottom) / (top - bottom);
+	output[2][2] = -2 / (far - near);
+	output[2][3] = -(far + near) / (far - near);
+	output[3][3] = 1;
+}
+
+
+void mat4x4_look_at(mat4x4 output, GLfloat camera_x, GLfloat camera_y, GLfloat camera_z, GLfloat target_x, GLfloat target_y, GLfloat target_z, GLfloat up_x, GLfloat up_y, GLfloat up_z) {
+	vec3 camera_position = {camera_x, camera_y, camera_z};
+    vec3 camera_target = {target_x, target_y, target_z};
+    vec3 camera_direction;
+    vec3_subtraction(camera_position, camera_target, camera_direction);
+    vec3_normalize(camera_direction);
+
+    vec3 up = {up_x, up_y, up_z}; 
+    vec3 camera_right;
+    vec3_cross(up, camera_direction, camera_right);
+    vec3_normalize(camera_right);
+
+    vec3 camera_up;
+    vec3_cross(camera_direction, camera_right, camera_up);
+
+    mat4x4_make_identity_matrix(output);
+    output[0][0] = camera_right[0];
+    output[0][1] = camera_right[1];
+    output[0][2] = camera_right[2];
+
+    output[1][0] = camera_up[0];
+    output[1][1] = camera_up[1];
+    output[1][2] = camera_up[2];
+
+    output[2][0] = camera_direction[0];
+    output[2][1] = camera_direction[1];
+    output[2][2] = camera_direction[2];
+
+    mat4x4 temp = identity_mat4x4;
+    temp[0][3] = -camera_position[0];
+    temp[1][3] = -camera_position[1];
+    temp[2][3] = -camera_position[2];
+
+    mat4x4_multiplication(output, temp, output);
 }

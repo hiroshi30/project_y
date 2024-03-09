@@ -1,15 +1,10 @@
+#include <GL/glew.h>
+
 #include <stdio.h>
 #include <string.h>
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 
-
-extern GLuint EBO, VBO, VAO;
-extern GLuint count;
-
-
-void obj_load(char title[]) {
+void obj_load(char* title, GLuint VAO, GLuint VBO, GLuint EBO) {
 	FILE *file = fopen(title, "r");
 
 	int vertices_count = 0;
