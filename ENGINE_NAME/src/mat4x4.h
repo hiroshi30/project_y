@@ -2,7 +2,7 @@
 #define mat4x4_h
 
 
-#define begin_mat4x4(x) &x[0][0]
+#define mat4x4_begin(x) &x[0][0]
 #define identity_mat4x4 {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}}
 #define zero_mat4x4 {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}
 
@@ -24,7 +24,7 @@ void mat4x4_perspective_projection2(mat4x4 output, GLfloat left, GLfloat right, 
 void mat4x4_orthographic_projection(mat4x4 output, GLfloat fov, GLfloat attitude, GLfloat near, GLfloat far);
 void mat4x4_orthographic_projection2(mat4x4 output, GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far);
 
-void mat4x4_look_at(mat4x4 output, GLfloat camera_x, GLfloat camera_y, GLfloat camera_z, GLfloat target_x, GLfloat target_y, GLfloat target_z, GLfloat up_x, GLfloat up_y, GLfloat up_z);
+void mat4x4_look_at(mat4x4 output, vec3 camera_position, vec3 camera_target, vec3 world_up);
 
 
 #endif // mat4x4_h

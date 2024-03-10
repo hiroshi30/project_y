@@ -2,13 +2,11 @@
 #define ENGINE_NAME_H
 
 
-#define DEBUG
-
-
-#define GLEW_STATIC
 #include <GL/glew.h>
 
 #include <GLFW/glfw3.h>
+
+#include <stdbool.h>
 
 #include <constants.h>
 #include <new_math.h>
@@ -18,6 +16,7 @@
 
 
 extern GLFWwindow* ENGINE_NAME_window;
+extern bool keys[1024];
 
 
 int ENGINE_NAME_init(int width, int height, char* title);

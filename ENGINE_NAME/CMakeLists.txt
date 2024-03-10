@@ -49,5 +49,5 @@ target_link_libraries(ENGINE_NAME PUBLIC
 )
 
 # -mwindows - remove console output
-target_compile_options(ENGINE_NAME PRIVATE -Wall -Wextra -Wpedantic)
+target_compile_options(ENGINE_NAME PRIVATE -Wall -Wextra -Wpedantic -DDEBUG -DGLEW_STATIC)
 target_compile_features(ENGINE_NAME PRIVATE c_std_23)

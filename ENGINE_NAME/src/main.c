@@ -1,6 +1,3 @@
-#define DEBUG
-
-#define GLEW_STATIC
 #include <GL/glew.h>
 
 #include <GLFW/glfw3.h>
@@ -8,15 +5,25 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 
 
 GLFWwindow* ENGINE_NAME_window;
+bool keys[1024];
 
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
-    if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GL_TRUE);
+    }
+
+    if (key >= 0 && key < 1024) {
+        if (action == GLFW_PRESS) {
+          keys[key] = true;
+        } else if (action == GLFW_RELEASE) {
+          keys[key] = false;
+        }
     }
 }
 
@@ -45,10 +52,10 @@ int ENGINE_NAME_init(int width, int height, char* title) {
         return 1;
     }
     glfwMakeContextCurrent(ENGINE_NAME_window);
+    
+    glfwSetKeyCallback(ENGINE_NAME_window, key_callback);
       
     glViewport(0, 0, width, height);
-
-    glfwSetKeyCallback(ENGINE_NAME_window, key_callback);
 
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {

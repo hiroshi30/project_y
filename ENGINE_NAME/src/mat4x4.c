@@ -1,4 +1,3 @@
-#define GLEW_STATIC
 #include <GL/glew.h>
 
 #include <math.h>
@@ -186,16 +185,13 @@ void mat4x4_orthographic_projection2(mat4x4 output, GLfloat left, GLfloat right,
 }
 
 
-void mat4x4_look_at(mat4x4 output, GLfloat camera_x, GLfloat camera_y, GLfloat camera_z, GLfloat target_x, GLfloat target_y, GLfloat target_z, GLfloat up_x, GLfloat up_y, GLfloat up_z) {
-	vec3 camera_position = {camera_x, camera_y, camera_z};
-    vec3 camera_target = {target_x, target_y, target_z};
+void mat4x4_look_at(mat4x4 output, vec3 camera_position, vec3 camera_target, vec3 world_up) {
     vec3 camera_direction;
     vec3_subtraction(camera_position, camera_target, camera_direction);
     vec3_normalize(camera_direction);
 
-    vec3 up = {up_x, up_y, up_z}; 
     vec3 camera_right;
-    vec3_cross(up, camera_direction, camera_right);
+    vec3_cross(world_up, camera_direction, camera_right);
     vec3_normalize(camera_right);
 
     vec3 camera_up;

@@ -20,5 +20,5 @@ target_include_directories(project_y PRIVATE
 	ENGINE_NAME
 )
 
-target_compile_options(project_y PRIVATE -Wall -Wextra -Wpedantic)
+target_compile_options(project_y PRIVATE -Wall -Wextra -Wpedantic -DDEBUG)
 target_compile_features(project_y PRIVATE c_std_23)

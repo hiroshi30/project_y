@@ -1,9 +1,15 @@
-#define GLEW_STATIC
 #include <GL/glew.h>
 
 #include <math.h>
 
 #include <vec3.h>
+
+
+void vec3_make(vec3 vector, GLfloat x, GLfloat y, GLfloat z) {
+	vector[0] = x;
+	vector[1] = y;
+	vector[2] = z;
+}
 
 
 void vec3_addition(vec3 summand1, vec3 summand2, vec3 sum) {
@@ -41,4 +47,11 @@ void vec3_cross(vec3 vector1, vec3 vector2, vec3 vector_result) {
 	vector_result[0] = temp[0];
 	vector_result[1] = temp[1];
 	vector_result[2] = temp[2];
+}
+
+
+void vec3_multiplication_scalar(vec3 multiplicanda, GLfloat multiplier, vec3 product) {
+	product[0] = multiplicanda[0] * multiplier;
+	product[1] = multiplicanda[1] * multiplier;
+	product[2] = multiplicanda[2] * multiplier;
 }
