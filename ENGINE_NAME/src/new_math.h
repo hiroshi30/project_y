@@ -1,9 +1,9 @@
-#ifndef new_math_h
-#define new_math_h
+#ifndef NEW_MATH_H
+#define NEW_MATH_H
 
 
 GLfloat random(GLfloat start, GLfloat end);
 GLint random_int(GLint start, GLint end);
 
 
-#endif // new_math_h
+#endif // NEW_MATH_H

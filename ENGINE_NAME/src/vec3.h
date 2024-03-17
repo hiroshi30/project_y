@@ -1,20 +1,20 @@
-#ifndef vec3_h
-#define vec3_h
+#ifndef VEC3_H
+#define VEC3_H
 
 
 typedef GLfloat vec3[3];
 
 
-void vec3_make(vec3 vector, GLfloat x, GLfloat y, GLfloat z);
+void vec3_make(vec3 vec_c, GLfloat x, GLfloat y, GLfloat z);
+void vec3_inverse(vec3 vec_a, vec3 vec_c);
+void vec3_normalize(vec3 vec_c);
 
-void vec3_addition(vec3 summand1, vec3 summand2, vec3 sum);
-void vec3_subtraction(vec3 minuend, vec3 subtrahend, vec3 difference);
-GLfloat vec3_multiplication(vec3 multiplicanda, vec3 multiplier);
+void vec3_addition(vec3 vec_a, vec3 vec_b, vec3 vec_c);
+void vec3_subtraction(vec3 vec_a, vec3 vec_b, vec3 vec_c);
+void vec3_cross(vec3 vec_a, vec3 vec_b, vec3 vec_c);
+GLfloat vec3_dot(vec3 vec_a, vec3 vec_b);
 
-void vec3_normalize(vec3 vector);
-void vec3_cross(vec3 vector1, vec3 vector2, vec3 vector_result);
-
-void vec3_multiplication_scalar(vec3 multiplicanda, GLfloat multiplier, vec3 product);
+void vec3_multiplication_scalar(vec3 vec_a, GLfloat vec_b, vec3 vec_c);
 
 
-#endif // vec3_h
+#endif // VEC3_H

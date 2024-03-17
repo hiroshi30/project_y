@@ -1,5 +1,5 @@
-#ifndef constants_h
-#define constants_h
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
 
 
 #define pi 3.14159265359
@@ -7,4 +7,4 @@
 #define radians_to_degrees 180 / pi
 
 
-#endif // constants_h
+#endif // CONSTANTS_H

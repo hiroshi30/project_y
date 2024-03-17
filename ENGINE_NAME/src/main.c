@@ -1,5 +1,4 @@
 #include <GL/glew.h>
-
 #include <GLFW/glfw3.h>
 #include <SOIL.h>
 
@@ -11,6 +10,12 @@
 
 GLFWwindow* ENGINE_NAME_window;
 bool keys[1024];
+GLfloat x_last;
+GLfloat y_last;
+GLfloat x_offset;
+GLfloat y_offset;
+GLfloat x_scroll;
+GLfloat y_scroll;
 
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
@@ -25,6 +30,21 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
           keys[key] = false;
         }
     }
+}
+
+
+void mouse_callback(GLFWwindow* window, double x, double y) {
+    x_offset = x_last - x;
+    y_offset = y_last - y;
+
+    x_last = x;
+    y_last = y;
+}
+
+
+void scroll_callback(GLFWwindow* window, double x, double y) {
+    x_scroll = x;
+    y_scroll = y;
 }
 
 
@@ -53,8 +73,17 @@ int ENGINE_NAME_init(int width, int height, char* title) {
     }
     glfwMakeContextCurrent(ENGINE_NAME_window);
     
+    glfwSetInputMode(ENGINE_NAME_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
     glfwSetKeyCallback(ENGINE_NAME_window, key_callback);
-      
+    glfwSetCursorPosCallback(ENGINE_NAME_window, mouse_callback);
+    glfwSetScrollCallback(ENGINE_NAME_window, scroll_callback);
+
+    x_last = (GLfloat)width / 2.0f;
+    y_last = (GLfloat)height / 2.0f;
+    
+    glfwSetCursorPos(ENGINE_NAME_window, x_last, y_last);
+
     glViewport(0, 0, width, height);
 
     glewExperimental = GL_TRUE;
