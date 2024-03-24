@@ -1,6 +1,7 @@
 #include <ENGINE_NAME.h>
 
 #include <stdio.h>
+#include <math.h>
 
 
 int main(void) {
