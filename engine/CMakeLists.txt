@@ -10,6 +10,8 @@ project(engine
 # OpenGL
 find_package(OpenGL REQUIRED)
 
+
+# GLFW
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -17,38 +19,36 @@ set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 set(GLFW_VULKAN_STATIC OFF CACHE BOOL "" FORCE)
 
-
-# GLFW
-add_subdirectory(external/glfw-3.3.10)
-
-set(BUILD_UTILS OFF CACHE BOOL "" FORCE)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/glfw-3.3.10)
 
 
 # GLEW
-add_subdirectory(external/glew-2.1.0/build/cmake)
+set(BUILD_UTILS OFF CACHE BOOL "" FORCE)
+
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/glew-2.2.0/build/cmake)
 
 
 # SOIL
-add_subdirectory(external/Simple-OpenGL-Image-Library)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/Simple-OpenGL-Image-Library)
 
 
 # engine
 add_library(engine STATIC
-	src/additional_math.c
-	src/vec3.c
-	src/mat4x4.c
-	src/camera.c
+	${CMAKE_CURRENT_SOURCE_DIR}/src/additional_math.c
+	${CMAKE_CURRENT_SOURCE_DIR}/src/vec3.c
+	${CMAKE_CURRENT_SOURCE_DIR}/src/mat4x4.c
+	${CMAKE_CURRENT_SOURCE_DIR}/src/camera.c
 	
-	src/engine.c
-	src/shader.c
-	src/texture.c
+	${CMAKE_CURRENT_SOURCE_DIR}/src/engine.c
+	${CMAKE_CURRENT_SOURCE_DIR}/src/shader.c
+	${CMAKE_CURRENT_SOURCE_DIR}/src/texture.c
 )
 
 target_include_directories(engine PUBLIC
 	${OPENGL_INCLUDE_DIRS}
-	external/glew-2.1.0/include
-	external/glfw-3.3.10/include
-	external/Simple-OpenGL-Image-Library/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/external/glew-2.2.0/include
+	${CMAKE_CURRENT_SOURCE_DIR}/external/glfw-3.3.10/include
+	${CMAKE_CURRENT_SOURCE_DIR}/external/Simple-OpenGL-Image-Library/src
 
 	src
 	include
@@ -64,3 +64,4 @@ target_link_libraries(engine PUBLIC
 # -mwindows - remove console output
 target_compile_options(engine PRIVATE -Wall -Wextra -Wpedantic -D${CMAKE_BUILD_TYPE} -DGLEW_STATIC)
 target_compile_features(engine PRIVATE c_std_23)
+
