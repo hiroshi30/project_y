@@ -2,23 +2,33 @@ cmake_minimum_required(VERSION 3.28 FATAL_ERROR)
 
 project(project_y
 	VERSION 0.0.1
-	DESCRIPTION "my mmorpg"
+	DESCRIPTION "Some kind of game"
 	LANGUAGES C
 )
 
-add_executable(project_y
+
+set(CMAKE_C_STANDARD 23)
+set(CMAKE_C_FLAGS "-Wall -Wextra -Wpedantic")
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+	string(APPEND CMAKE_C_FLAGS " -DDEBUG")
+elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+	string(APPEND CMAKE_C_FLAGS " -DRELEASE -mwindows")
+endif()
+
+
+# ukiyo
+add_subdirectory(ukiyo)
+
+
+# game
+add_executable(game
 	src/main.c
 )
 
-add_subdirectory(engine)
-
-target_link_libraries(project_y PRIVATE
-	engine
+target_include_directories(game PRIVATE
+	ukiyo
 )
 
-target_include_directories(project_y PRIVATE
-	engine
+target_link_libraries(game PRIVATE
+	ukiyo
 )
-
-target_compile_options(project_y PRIVATE -Wall -Wextra -Wpedantic -D${CMAKE_BUILD_TYPE})
-target_compile_features(project_y PRIVATE c_std_23)

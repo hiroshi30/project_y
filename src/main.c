@@ -1,23 +1,22 @@
 #include <math.h>
 
-#include <all.h>
+#include <ukiyo.h>
 
 
 int main(void) {
     const GLuint window_width = 800;
     const GLuint window_height = 600;
 
-   	if (engine_init(window_width, window_height, "project_y") != 0) {
-        return 1;
-    }
+   	engineInit(window_width, window_height, "project_y");
 
-    GLuint vertex_shader = shader_create_vertex("shaders/default.vert");
-    GLuint fragment_shader = shader_create_fragment("shaders/default.frag");
-    GLuint shader_program = shader_create_shader_program(vertex_shader, fragment_shader);
-
-    GLuint light_vertex_shader = shader_create_vertex("shaders/light.vert");
-    GLuint light_fragment_shader = shader_create_fragment("shaders/light.frag");
-    GLuint light_shader_program = shader_create_shader_program(light_vertex_shader, light_fragment_shader);
+    GLuint shader_program = shaderProgram(
+        "C:/Users/hiroshi/Desktop/project_y/shaders/default.vert",
+        "C:/Users/hiroshi/Desktop/project_y/shaders/default.frag"
+    );
+    GLuint light_shader_program = shaderProgram(
+        "C:/Users/hiroshi/Desktop/project_y/shaders/light.vert",
+        "C:/Users/hiroshi/Desktop/project_y/shaders/light.frag"
+    );
 
     GLfloat vbo_data[] = {
         -0.5, -0.5, -0.5,  0,  0, -1,
@@ -92,22 +91,21 @@ int main(void) {
 
     glBindVertexArray(0);
 
-    Camera camera;
-    Camera_construct(&camera,
+    Camera *camera = cameraAllocate(
         0, 0, 10,   // vec3 position
         0, 1, 0,    // vec3 world_up
-        7, 0.09,    // movement_speed, sensitivity
-        30, 90,     // min_FOV, max_FOV
-        -90, 0      // yaw (x), pitch (y)
+        -90, 0,     // yaw (x), pitch (y)
+        30, 90,     // min_fov, max_fov
+        7, 0.09     // movement_speed, sensitivity
     );
 
     mat4x4 projection;
     
     mat4x4 object_models[15];
     for (int i = 0; i < 15; ++i) {
-        mat4x4_make_identity(object_models[i]);
-        mat4x4_translate(object_models[i], random(-5, 5), random(-5, 5), random(-5, 5));
-        mat4x4_rotate(object_models[i], random(-90, 90), random(-90, 90), random(-90, 90));
+        mat4x4Identity(object_models[i]);
+        mat4x4Translate(object_models[i], random(-5, 5), random(-5, 5), random(-5, 5));
+        mat4x4Rotate(object_models[i], random(-90, 90), random(-90, 90), random(-90, 90));
     }
 
     GLfloat delta_time;
@@ -121,16 +119,17 @@ int main(void) {
         previous_time = current_time;
         
         glfwPollEvents();
-        Camera_move(&camera, delta_time);
-        Camera_look(&camera);
-        Camera_scroll(&camera);
-        Camera_look_at(&camera);
+        cameraMove(camera, delta_time);
+        cameraLook(camera);
+        cameraScroll(camera);
+        cameraCalculateView(camera);
 
-        mat4x4_perspective_projection(projection, camera.FOV, (GLfloat)window_width / (GLfloat)window_height, 0.1, 100);
+        mat4x4PerspectiveProjection(projection, camera->fov, (GLfloat)window_width / (GLfloat)window_height, 0.1, 100);
 
-        mat4x4 light_model = mat4x4_identity;
-        mat4x4_translate(light_model, 7 * cos(glfwGetTime()), 1, -7 * sin(glfwGetTime()));
-        mat4x4_scale(light_model, 0.2, 0.2, 0.2);
+        mat4x4 light_model;
+        mat4x4Identity(light_model);
+        mat4x4Translate(light_model, 7 * cos(glfwGetTime()), 1, -7 * sin(glfwGetTime()));
+        mat4x4Scale(light_model, 0.2, 0.2, 0.2);
 
 
         glClearColor(0, 0, 0, 1);
@@ -140,10 +139,10 @@ int main(void) {
         glUseProgram(shader_program);
 
         GLint view_location = glGetUniformLocation(shader_program, "view");
-        glUniformMatrix4fv(view_location, 1, GL_TRUE, mat4x4_begin(camera.view));
+        glUniformMatrix4fv(view_location, 1, GL_TRUE, mat4x4Begin(camera->view));
 
         GLint projection_location = glGetUniformLocation(shader_program, "projection");
-        glUniformMatrix4fv(projection_location, 1, GL_TRUE, mat4x4_begin(projection));
+        glUniformMatrix4fv(projection_location, 1, GL_TRUE, mat4x4Begin(projection));
 
         GLint object_color_location = glGetUniformLocation(shader_program, "object_color");
         glUniform3f(object_color_location, 1, 0.5, 0.31);
@@ -156,7 +155,7 @@ int main(void) {
 
         GLint model_location = glGetUniformLocation(shader_program, "model");
         for (int i = 0; i < 15; ++i) {
-            glUniformMatrix4fv(model_location, 1, GL_TRUE, mat4x4_begin(object_models[i]));
+            glUniformMatrix4fv(model_location, 1, GL_TRUE, mat4x4Begin(object_models[i]));
 
             glBindVertexArray(VAO);
             glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -167,13 +166,13 @@ int main(void) {
         glUseProgram(light_shader_program);
 
         view_location = glGetUniformLocation(light_shader_program, "view");
-        glUniformMatrix4fv(view_location, 1, GL_TRUE, mat4x4_begin(camera.view));
+        glUniformMatrix4fv(view_location, 1, GL_TRUE, mat4x4Begin(camera->view));
 
         projection_location = glGetUniformLocation(light_shader_program, "projection");
-        glUniformMatrix4fv(projection_location, 1, GL_TRUE, mat4x4_begin(projection));
+        glUniformMatrix4fv(projection_location, 1, GL_TRUE, mat4x4Begin(projection));
 
         model_location = glGetUniformLocation(light_shader_program, "model");
-        glUniformMatrix4fv(model_location, 1, GL_TRUE, mat4x4_begin(light_model));
+        glUniformMatrix4fv(model_location, 1, GL_TRUE, mat4x4Begin(light_model));
 
         glBindVertexArray(light_VAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -190,7 +189,8 @@ int main(void) {
     glDeleteProgram(shader_program);
     glDeleteProgram(light_shader_program);
 
-    engine_exit();
+    cameraDeallocate(camera);
+    engineExit();
 
     return 0;
 }
