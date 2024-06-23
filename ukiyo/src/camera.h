@@ -24,7 +24,7 @@ typedef struct {
 } Camera;
 
 
-Camera *cameraAllocate(
+Camera *Camera_allocate(
     GLfloat x, GLfloat y, GLfloat z,
     GLfloat world_up_x, GLfloat world_up_y, GLfloat world_up_z,
     
@@ -36,14 +36,16 @@ Camera *cameraAllocate(
     
     GLfloat movement_speed,
     GLfloat sensitivity);
-void cameraDeallocate(Camera *camera);
+void Camera_deallocate(Camera *camera);
 
-void cameraMove(Camera *camera, GLfloat delta_time);
-void cameraLook(Camera *camera);
-void cameraScroll(Camera *camera);
-void cameraUpdate(Camera *camera);
+void Camera_update(Camera *camera);
+void Camera_calculateView(Camera *camera);
 
-void cameraCalculateView(Camera *camera);
+void Camera_move(Camera *camera);
+void Camera_look(Camera *camera);
+void Camera_scroll(Camera *camera);
+
+void Camera_actions(Camera *camera);
 
 
 #endif // CAMERA_H

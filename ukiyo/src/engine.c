@@ -7,6 +7,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "engine.h"
+
 
 GLFWwindow *engine_window;
 bool keys[1024];
@@ -20,18 +22,9 @@ GLfloat delta_mouse_y;
 GLfloat scroll_x;
 GLfloat scroll_y;
 
-
-void engineExit(void) {
-    glfwDestroyWindow(engine_window);
-    glfwTerminate();
-}
-
-
-void engineExitFailure(void) {
-    glfwDestroyWindow(engine_window);
-    glfwTerminate();
-    exit(EXIT_FAILURE);
-}
+GLfloat previous_time;
+GLfloat current_time;
+GLfloat delta_time;
 
 
 void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mode) {
@@ -77,7 +70,7 @@ void engineInit(int width, int height, const char *title) {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     
-    engine_window = glfwCreateWindow(width, height, title, NULL, NULL);
+    engine_window = glfwCreateWindow(width, height, title, 0, 0);
     if (engine_window == NULL) {
         #ifdef DEBUG
         printf("!!! ERROR in engineInit(): error in glfwCreateWindow() !!!\n");
@@ -108,6 +101,54 @@ void engineInit(int width, int height, const char *title) {
     }
 
     glEnable(GL_DEPTH_TEST);
+
+    previous_time = glfwGetTime();
+}
+
+
+void engineExit(void) {
+    glfwDestroyWindow(engine_window);
+    glfwTerminate();
+}
+
+
+void engineExitFailure(void) {
+    glfwDestroyWindow(engine_window);
+    glfwTerminate();
+    exit(EXIT_FAILURE);
+}
+
+
+bool engineWorking(void) {
+    return !glfwWindowShouldClose(engine_window);
+}
+
+
+void engineEvents(void) {
+    glfwPollEvents();
+}
+
+
+void engineTime(void) {
+    current_time = glfwGetTime();
+    delta_time = current_time - previous_time;
+    previous_time = current_time;
+}
+
+
+void engineClear(void) {
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+
+void engineSwapBuffers(void) {
+    glfwSwapBuffers(engine_window);
+}
+
+
+void enginePolygonsMeshView(void) {
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 

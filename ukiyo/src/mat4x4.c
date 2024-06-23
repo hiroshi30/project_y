@@ -6,7 +6,7 @@
 #include "mat4x4.h"
 
 
-void mat4x4Zero(mat4x4 mat) {
+void mat4x4_zero(mat4x4 mat) {
 	mat[0][0] = 0;
 	mat[0][1] = 0;
 	mat[0][2] = 0;
@@ -29,7 +29,7 @@ void mat4x4Zero(mat4x4 mat) {
 }
 
 
-void mat4x4Identity(mat4x4 mat) {
+void mat4x4_identity(mat4x4 mat) {
 	mat[0][0] = 1;
 	mat[0][1] = 0;
 	mat[0][2] = 0;
@@ -52,9 +52,9 @@ void mat4x4Identity(mat4x4 mat) {
 }
 
 
-void mat4x4Multiplication(mat4x4 mat_in1, mat4x4 mat_in2, mat4x4 mat_out) {
+void mat4x4_multiplication(mat4x4 mat_in1, mat4x4 mat_in2, mat4x4 mat_out) {
 	mat4x4 temp;
-	mat4x4Zero(temp);
+	mat4x4_zero(temp);
 	for (int y = 0; y < 4; ++y) {
 		for (int x = 0; x < 4; ++x) {
 			for (int i = 0; i < 4; ++i) {
@@ -70,13 +70,13 @@ void mat4x4Multiplication(mat4x4 mat_in1, mat4x4 mat_in2, mat4x4 mat_out) {
 }
 
 
-void mat4x4Scale(mat4x4 mat, GLfloat x, GLfloat y, GLfloat z) {
+void mat4x4_scale(mat4x4 mat, GLfloat x, GLfloat y, GLfloat z) {
 	// mat4x4 temp;
-	// mat4x4Identity(temp);
+	// mat4x4_identity(temp);
 	// temp[0][0] = x;
 	// temp[1][1] = y;
 	// temp[2][2] = z;
-	// mat4x4Multiplication(mat, temp, mat);
+	// mat4x4_multiplication(mat, temp, mat);
 
 	mat[0][0] *= x;
 	mat[1][0] *= x;
@@ -95,13 +95,13 @@ void mat4x4Scale(mat4x4 mat, GLfloat x, GLfloat y, GLfloat z) {
 }
 
 
-void mat4x4Translate(mat4x4 mat, GLfloat x, GLfloat y, GLfloat z) {
+void mat4x4_translate(mat4x4 mat, GLfloat x, GLfloat y, GLfloat z) {
 	// mat4x4 temp;
-	// mat4x4Identity(temp);
+	// mat4x4_identity(temp);
 	// temp[0][3] = x;
 	// temp[1][3] = y;
 	// temp[2][3] = z;
-	// mat4x4Multiplication(mat, temp, mat);
+	// mat4x4_multiplication(mat, temp, mat);
 
 	mat[0][3] += mat[0][0] * x + mat[0][1] * y + mat[0][2] * z;
 	mat[1][3] += mat[1][0] * x + mat[1][1] * y + mat[1][2] * z;
@@ -110,42 +110,42 @@ void mat4x4Translate(mat4x4 mat, GLfloat x, GLfloat y, GLfloat z) {
 }
 
 
-void mat4x4Rotate(mat4x4 mat, GLfloat x, GLfloat y, GLfloat z) {
+void mat4x4_rotate(mat4x4 mat, GLfloat x, GLfloat y, GLfloat z) {
 	x *= DEGREES_TO_RADIANS;
 	y *= DEGREES_TO_RADIANS;
 	z *= DEGREES_TO_RADIANS;
 
 	mat4x4 rotate_x;
-	mat4x4Identity(rotate_x);
+	mat4x4_identity(rotate_x);
 	rotate_x[1][1] = cos(x);
 	rotate_x[1][2] = -sin(x);
 	rotate_x[2][1] = sin(x);
 	rotate_x[2][2] = cos(x);
 
-	mat4x4Multiplication(mat, rotate_x, mat);
+	mat4x4_multiplication(mat, rotate_x, mat);
 
 	mat4x4 rotate_y;
-	mat4x4Identity(rotate_y);
+	mat4x4_identity(rotate_y);
 	rotate_y[0][0] = cos(y);
 	rotate_y[0][2] = sin(y);
 	rotate_y[2][0] = -sin(y);
 	rotate_y[2][2] = cos(y);
 
-	mat4x4Multiplication(mat, rotate_y, mat);
+	mat4x4_multiplication(mat, rotate_y, mat);
 
 	mat4x4 rotate_z;
-	mat4x4Identity(rotate_z);
+	mat4x4_identity(rotate_z);
 	rotate_z[0][0] = cos(z);
 	rotate_z[0][1] = -sin(z);
 	rotate_z[1][0] = sin(z);
 	rotate_z[1][1] = cos(z);
 
-	mat4x4Multiplication(mat, rotate_z, mat);
+	mat4x4_multiplication(mat, rotate_z, mat);
 }
 
 
-void mat4x4PerspectiveProjection(mat4x4 mat, GLfloat fov, GLfloat attitude, GLfloat near, GLfloat far) {
-	mat4x4Zero(mat);
+void mat4x4_perspectiveProjection(mat4x4 mat, GLfloat fov, GLfloat attitude, GLfloat near, GLfloat far) {
+	mat4x4_zero(mat);
 	
 	fov *= DEGREES_TO_RADIANS;
 
@@ -157,8 +157,8 @@ void mat4x4PerspectiveProjection(mat4x4 mat, GLfloat fov, GLfloat attitude, GLfl
 }
 
 
-void mat4x4OrthographicProjection(mat4x4 mat, GLfloat fov, GLfloat attitude, GLfloat near, GLfloat far) {
-	mat4x4Zero(mat);
+void mat4x4_orthographicProjection(mat4x4 mat, GLfloat fov, GLfloat attitude, GLfloat near, GLfloat far) {
+	mat4x4_zero(mat);
 	
 	fov *= DEGREES_TO_RADIANS;
 

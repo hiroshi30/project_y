@@ -1,10 +1,6 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-
-extern GLFWwindow* engine_window;
-
-
 #include "constants.h"
 
 #include "random.h"
